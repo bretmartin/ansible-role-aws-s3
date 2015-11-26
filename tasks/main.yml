@@ -1,6 +1,6 @@
 ---
 
-- name: create and configure {{ buckets[item]["description"] }} bucket
+- name: create and configure S3 buckets
   s3_bucket:
     name: '{{ item }}'
     policy: '{{ buckets[item]["policy"] | default(omit) }}'
