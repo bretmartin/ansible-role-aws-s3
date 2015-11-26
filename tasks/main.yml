@@ -1,0 +1,8 @@
+---
+
+- name: create and configure {{ buckets[item]["description"] }} bucket
+  s3_bucket:
+    name: '{{ item }}'
+    policy: '{{ buckets[item]["policy"] }}'
+    profile: '{{ profile }}'
+  with_items: buckets
