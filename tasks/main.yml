@@ -1,8 +1,28 @@
 ---
 
+- name: set global facts
+  set_fact:
+    s3_url: 'https://console.aws.amazon.com/s3/home?region={{ region }}'
+
+- name: call optional notifier
+  include: 'roles/{{ notifier_role }}/tasks/main.yml'
+  vars:
+    message: >
+      started running role <b>aws-s3</b>
+      on <a href="{{ s3_url }}">account {{ profile }}</a>
+  when: notifier_role is defined
+
 - name: create and configure S3 buckets
   s3_bucket:
     name: '{{ item }}'
     policy: '{{ buckets[item]["policy"] | default(omit) }}'
     profile: '{{ profile }}'
   with_items: buckets
+
+- name: call optional notifier
+  include: 'roles/{{ notifier_role }}/tasks/main.yml'
+  vars:
+    message: >
+      finished running role <b>aws-s3</b>
+      on <a href="{{ s3_url }}">account {{ profile }}</a>
+  when: notifier_role is defined
