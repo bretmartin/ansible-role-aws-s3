@@ -5,9 +5,9 @@
 - name: create and configure S3 buckets
   s3_bucket:
     name: '{{ item }}'
-    policy: '{{ buckets[item]["policy"] | default(omit) }}'
+    policy: '{{ aws_s3_buckets[item]["policy"] | default(omit) }}'
     profile: '{{ aws_profile }}'
-  with_items: buckets
+  with_items: aws_s3_buckets
   register: s3_bucket
 
 - include: post.yml
