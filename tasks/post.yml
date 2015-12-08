@@ -3,28 +3,28 @@
 - name: set changed buckets fact
   set_fact:
     changed_buckets: >
-      {{ s3_bucket.results
+      {{ _aws_s3_bucket.results
          | selectattr("changed") | map(attribute="name") | list | sort }}
 
 - name: remove new buckets from changed buckets fact
   set_fact:
-    changed_buckets: '{{ changed_buckets | difference(new_buckets) }}'
+    changed_buckets: '{{ changed_buckets | difference(_aws_s3_new_buckets) }}'
 
 
 - name: call optional notifier
   include: 'roles/{{ notifier_role }}/tasks/main.yml'
   vars:
     message: >
-      created new S3 bucket{% if new_buckets.__len__() != 1 %}s{% endif %}
-      {% for bucket in new_buckets -%}
+      created new S3 bucket{% if _aws_s3_new_buckets.__len__() != 1 %}s{% endif %}
+      {% for bucket in _aws_s3_new_buckets -%}
       <a href="https://console.aws.amazon.com/s3/home?region={{
         aws_region }}%26bucket={{ bucket }}">{{ bucket }}</a>
       {%- if not loop.last %}, {% endif -%}
       {% endfor %}
-      in <a href="{{ s3_url }}">account {{ aws_profile }}</a>
+      in <a href="{{ _aws_s3_url }}">account {{ aws_profile }}</a>
   when: >
     notifier_role is defined and
-    new_buckets
+    _aws_s3_new_buckets
 
 - name: call optional notifier
   include: 'roles/{{ notifier_role }}/tasks/main.yml'
@@ -38,7 +38,7 @@
         aws_region }}%26bucket={{ bucket }}">{{ bucket }}</a>
       {%- if not loop.last %}, {% endif -%}
       {% endfor %}
-      in <a href="{{ s3_url }}">account {{ aws_profile }}</a>
+      in <a href="{{ _aws_s3_url }}">account {{ aws_profile }}</a>
   when: >
     notifier_role is defined and
     changed_buckets
@@ -52,20 +52,20 @@
       mrkdwn_in: ['text']
       text: >
         *WARNING:* S3
-        bucket{% if untracked_buckets.__len__() != 1 %}s{% endif %}
-        {% for bucket in untracked_buckets -%}
+        bucket{% if _aws_s3_untracked_buckets.__len__() != 1 %}s{% endif %}
+        {% for bucket in _aws_s3_untracked_buckets -%}
         <a href="https://console.aws.amazon.com/s3/home?region={{
           aws_region }}%26bucket={{ bucket }}">{{ bucket }}</a>
         {%- if not loop.last %}, {% endif -%}
         {% endfor %}
-        exist{% if untracked_buckets.__len__() == 1 %}s{% endif %}
-        in <a href="{{ s3_url }}">account {{ aws_profile }}</a>
+        exist{% if _aws_s3_untracked_buckets.__len__() == 1 %}s{% endif %}
+        in <a href="{{ _aws_s3_url }}">account {{ aws_profile }}</a>
         <br/>but
-        {% if untracked_buckets.__len__() == 1 %}is{% else %}are{% endif %}
+        {% if _aws_s3_untracked_buckets.__len__() == 1 %}is{% else %}are{% endif %}
         not configured by Ansible
   when: >
     notifier_role is defined and
-    untracked_buckets
+    _aws_s3_untracked_buckets
 
 
 - name: call optional notifier
@@ -73,5 +73,5 @@
   vars:
     message: >
       finished running role <b>aws-s3</b>
-      on <a href="{{ s3_url }}">account {{ aws_profile }}</a>
+      on <a href="{{ _aws_s3_url }}">account {{ aws_profile }}</a>
   when: notifier_role is defined

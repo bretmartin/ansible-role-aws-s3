@@ -8,6 +8,6 @@
     policy: '{{ aws_s3_buckets[item]["policy"] | default(omit) }}'
     profile: '{{ aws_profile }}'
   with_items: aws_s3_buckets
-  register: s3_bucket
+  register: _aws_s3_bucket
 
 - include: post.yml

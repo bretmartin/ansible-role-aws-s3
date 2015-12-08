@@ -2,14 +2,15 @@
 
 - name: set global facts
   set_fact:
-    s3_url: 'https://console.aws.amazon.com/s3/home?region={{ aws_region }}'
+    _aws_s3_url: >-
+      https://console.aws.amazon.com/s3/home?region={{ aws_region }}
 
 - name: call optional notifier
   include: 'roles/{{ notifier_role }}/tasks/main.yml'
   vars:
     message: >
       started running role <b>aws-s3</b>
-      on <a href="{{ s3_url }}">account {{ aws_profile }}</a>
+      on <a href="{{ _aws_s3_url }}">account {{ aws_profile }}</a>
   when: notifier_role is defined
 
 
@@ -19,18 +20,19 @@
               --query 'Buckets[].Name'
               --profile '{{ aws_profile }}'
   changed_when: False
-  register: existing_buckets
+  register: _aws_s3_existing_buckets
 
 - name: set existing buckets fact
   set_fact:
-    existing_buckets: '{{ existing_buckets.stdout | from_json | sort }}'
+    _aws_s3_existing_buckets: >
+      {{ _aws_s3_existing_buckets.stdout | from_json | sort }}
 
 - name: set new buckets fact
   set_fact:
-    new_buckets: >
-      {{ aws_s3_buckets | difference(existing_buckets) | sort }}
+    _aws_s3_new_buckets: >
+      {{ aws_s3_buckets | difference(_aws_s3_existing_buckets) | sort }}
 
 - name: set untracked buckets fact
   set_fact:
-    untracked_buckets: >
-      {{ existing_buckets | difference(aws_s3_buckets) | sort }}
+    _aws_s3_untracked_buckets: >
+      {{ _aws_s3_existing_buckets | difference(aws_s3_buckets) | sort }}
