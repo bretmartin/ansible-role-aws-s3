@@ -9,7 +9,7 @@
   vars:
     message: >
       started running role <b>aws-s3</b>
-      on <a href="{{ s3_url }}">account {{ profile }}</a>
+      on <a href="{{ s3_url }}">account {{ aws_profile }}</a>
   when: notifier_role is defined
 
 
@@ -17,7 +17,7 @@
   command: >
     aws s3api list-buckets
               --query 'Buckets[].Name'
-              --profile '{{ profile }}'
+              --profile '{{ aws_profile }}'
   changed_when: False
   register: existing_buckets
 

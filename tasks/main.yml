@@ -6,7 +6,7 @@
   s3_bucket:
     name: '{{ item }}'
     policy: '{{ buckets[item]["policy"] | default(omit) }}'
-    profile: '{{ profile }}'
+    profile: '{{ aws_profile }}'
   with_items: buckets
   register: s3_bucket
 
