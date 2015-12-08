@@ -18,7 +18,7 @@
       created new S3 bucket{% if new_buckets.__len__() != 1 %}s{% endif %}
       {% for bucket in new_buckets -%}
       <a href="https://console.aws.amazon.com/s3/home?region={{
-        region }}%26bucket={{ bucket }}">{{ bucket }}</a>
+        aws_region }}%26bucket={{ bucket }}">{{ bucket }}</a>
       {%- if not loop.last %}, {% endif -%}
       {% endfor %}
       in <a href="{{ s3_url }}">account {{ aws_profile }}</a>
@@ -35,7 +35,7 @@
       on S3 bucket{% if changed_buckets.__len__() != 1 %}s{% endif %}
       {% for bucket in changed_buckets -%}
       <a href="https://console.aws.amazon.com/s3/home?region={{
-        region }}%26bucket={{ bucket }}">{{ bucket }}</a>
+        aws_region }}%26bucket={{ bucket }}">{{ bucket }}</a>
       {%- if not loop.last %}, {% endif -%}
       {% endfor %}
       in <a href="{{ s3_url }}">account {{ aws_profile }}</a>
@@ -55,7 +55,7 @@
         bucket{% if untracked_buckets.__len__() != 1 %}s{% endif %}
         {% for bucket in untracked_buckets -%}
         <a href="https://console.aws.amazon.com/s3/home?region={{
-          region }}%26bucket={{ bucket }}">{{ bucket }}</a>
+          aws_region }}%26bucket={{ bucket }}">{{ bucket }}</a>
         {%- if not loop.last %}, {% endif -%}
         {% endfor %}
         exist{% if untracked_buckets.__len__() == 1 %}s{% endif %}
