@@ -2,8 +2,7 @@
 
 - name: set global facts
   set_fact:
-    _aws_s3_url: >-
-      https://console.aws.amazon.com/s3/home?region={{ aws_region }}
+    _aws_s3_url: https://console.aws.amazon.com/s3/home
 
 - name: call optional notifier
   include: 'roles/{{ notifier_role }}/tasks/main.yml'

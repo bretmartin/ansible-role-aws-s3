@@ -17,8 +17,7 @@
     message: >
       created new S3 bucket{% if _aws_s3_new_buckets.__len__() != 1 %}s{% endif %}
       {% for bucket in _aws_s3_new_buckets -%}
-      <a href="https://console.aws.amazon.com/s3/home?region={{
-        aws_region }}%26bucket={{ bucket }}">{{ bucket }}</a>
+      <a href="{{ _aws_s3_url }}?bucket={{ bucket }}">{{ bucket }}</a>
       {%- if not loop.last %}, {% endif -%}
       {% endfor %}
       in <a href="{{ _aws_s3_url }}">account {{ aws_profile }}</a>
@@ -34,8 +33,7 @@
       polic{% if changed_buckets.__len__() == 1 %}y{% else %}ies{% endif %}
       on S3 bucket{% if changed_buckets.__len__() != 1 %}s{% endif %}
       {% for bucket in changed_buckets -%}
-      <a href="https://console.aws.amazon.com/s3/home?region={{
-        aws_region }}%26bucket={{ bucket }}">{{ bucket }}</a>
+      <a href="{{ _aws_s3_url }}?bucket={{ bucket }}">{{ bucket }}</a>
       {%- if not loop.last %}, {% endif -%}
       {% endfor %}
       in <a href="{{ _aws_s3_url }}">account {{ aws_profile }}</a>
@@ -54,8 +52,7 @@
         *WARNING:* S3
         bucket{% if _aws_s3_untracked_buckets.__len__() != 1 %}s{% endif %}
         {% for bucket in _aws_s3_untracked_buckets -%}
-        <a href="https://console.aws.amazon.com/s3/home?region={{
-          aws_region }}%26bucket={{ bucket }}">{{ bucket }}</a>
+        <a href="{{ _aws_s3_url }}?bucket={{ bucket }}">{{ bucket }}</a>
         {%- if not loop.last %}, {% endif -%}
         {% endfor %}
         exist{% if _aws_s3_untracked_buckets.__len__() == 1 %}s{% endif %}
