@@ -11,7 +11,7 @@
     changed_buckets: '{{ changed_buckets | difference(_aws_s3_new_buckets) }}'
 
 
-- name: call optional notifier
+- name: call optional notifier for newly-created buckets
   include: 'roles/{{ notifier_role }}/tasks/main.yml'
   vars:
     message: >
@@ -25,7 +25,7 @@
     notifier_role is defined and
     _aws_s3_new_buckets
 
-- name: call optional notifier
+- name: call optional notifier for modified buckets
   include: 'roles/{{ notifier_role }}/tasks/main.yml'
   vars:
     message: >
@@ -41,7 +41,7 @@
     notifier_role is defined and
     changed_buckets
 
-- name: call optional notifier
+- name: call optional notifier for untracked buckets
   include: 'roles/{{ notifier_role }}/tasks/main.yml'
   vars:
     message:
