@@ -8,7 +8,7 @@
     policy: '{{ aws_s3_buckets[item]["policy"] | default(omit) }}'
     profile: '{{ aws_profile }}'
     region: '{{ aws_s3_buckets[item]["region"] | default(omit) }}'
-  with_items: aws_s3_buckets
+  with_items: '{{ aws_s3_buckets }}'
   register: _aws_s3_bucket
 
 - include: post.yml
