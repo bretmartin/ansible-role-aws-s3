@@ -11,4 +11,12 @@
   with_items: '{{ aws_s3_buckets }}'
   register: _aws_s3_bucket
 
+- name: configure S3 bucket website hosting
+  include: website.yml
+  vars:
+    _aws_s3_bucket: '{{ bucket }}'
+  with_items: '{{ aws_s3_buckets }}'
+  loop_control:
+    loop_var: bucket
+
 - include: post.yml

@@ -1,0 +1,38 @@
+
+
+- name: set configured website hosting configuration fact
+        for bucket '{{ _aws_s3_bucket }}'
+  set_fact:
+    _aws_s3_bucket_configured_website: >
+      {{ aws_s3_buckets[_aws_s3_bucket]["website"] | default({}) }}
+    _aws_s3_bucket_existing_website: {}
+
+- name: retrieve current website hosting configuration
+        for bucket '{{ _aws_s3_bucket }}'
+  shell: >
+    aws s3api get-bucket-website \
+              --bucket '{{ _aws_s3_bucket }}' \
+              --profile '{{ aws_profile }}' \
+    ; \
+    true
+  register: _aws_s3_bucket_website
+  changed_when: False
+
+- name: set existing website hosting configuration fact
+        for bucket '{{ _aws_s3_bucket }}'
+  set_fact:
+    _aws_s3_bucket_existing_website: >
+      {{ _aws_s3_bucket_website.stdout | from_json }}
+  when: _aws_s3_bucket_website.stdout
+
+- name: update website hosting configuration
+        for bucket '{{ _aws_s3_bucket }}'
+  command: >
+    aws s3api put-bucket-website
+              --bucket '{{ _aws_s3_bucket }}'
+              --website-configuration
+                  '{{ _aws_s3_bucket_configured_website | to_json }}'
+              --profile '{{ aws_profile }}'
+  when: >
+    _aws_s3_bucket_existing_website
+    != _aws_s3_bucket_configured_website
