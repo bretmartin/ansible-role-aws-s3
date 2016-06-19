@@ -33,6 +33,7 @@
               --website-configuration
                   '{{ _aws_s3_bucket_configured_website | to_json }}'
               --profile '{{ aws_profile }}'
+              --region '{{ aws_s3_buckets[_aws_s3_bucket]["region"] }}'
   when: >
     _aws_s3_bucket_existing_website
     != _aws_s3_bucket_configured_website
