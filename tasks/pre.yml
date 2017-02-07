@@ -4,14 +4,30 @@
   set_fact:
     _aws_s3_url: https://console.aws.amazon.com/s3/home
 
+- name: set target buckets fact
+  set_fact:
+    _aws_s3_target_buckets: '{{ aws_s3_target_buckets.split(",") | sort }}'
+
 - name: call optional notifier
   include: 'roles/{{ notifier_role }}/tasks/main.yml'
   vars:
     message: >
       started running role <b>aws-s3</b>
-      on <a href="{{ _aws_s3_url }}">account {{ aws_profile }}</a>
+      on <a href="{{ _aws_s3_url }}">account {{ aws_profile }}</a>{%
+      if _aws_s3_target_buckets != [""]
+      -%}, bucket {% for b in _aws_s3_target_buckets -%}
+      <a href="{{ _aws_s3_url }}?bucket={{ b }}">{{ b }}</a>{%
+      if not loop.last -%}, {% endif -%}{% endfor -%}{% endif -%}
   when: notifier_role is defined
 
+- name: set configured buckets fact
+  set_fact:
+    _aws_s3_configured_buckets: '{{ aws_s3_buckets.keys() | sort }}'
+
+- name: set default target buckets fact
+  set_fact:
+    _aws_s3_target_buckets: '{{ _aws_s3_configured_buckets }}'
+  when: '_aws_s3_target_buckets == [""]'
 
 - name: list existing buckets
   command: >
@@ -29,9 +45,11 @@
 - name: set new buckets fact
   set_fact:
     _aws_s3_new_buckets: >
-      {{ aws_s3_buckets | difference(_aws_s3_existing_buckets) | sort }}
+      {{ _aws_s3_configured_buckets
+         | difference(_aws_s3_existing_buckets) | sort }}
 
 - name: set untracked buckets fact
   set_fact:
     _aws_s3_untracked_buckets: >
-      {{ _aws_s3_existing_buckets | difference(aws_s3_buckets) | sort }}
+      {{ _aws_s3_existing_buckets
+         | difference(_aws_s3_configured_buckets) | sort }}

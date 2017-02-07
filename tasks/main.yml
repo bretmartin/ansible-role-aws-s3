@@ -8,14 +8,14 @@
     policy: '{{ aws_s3_buckets[item]["policy"] | default(omit) }}'
     profile: '{{ aws_profile }}'
     region: '{{ aws_s3_buckets[item]["region"] | default(omit) }}'
-  with_items: '{{ aws_s3_buckets }}'
+  with_items: '{{ _aws_s3_target_buckets }}'
   register: _aws_s3_bucket
 
 - name: configure S3 bucket website hosting
   include: website.yml
   vars:
     _aws_s3_bucket: '{{ bucket }}'
-  with_items: '{{ aws_s3_buckets }}'
+  with_items: '{{ _aws_s3_target_buckets }}'
   loop_control:
     loop_var: bucket
 
