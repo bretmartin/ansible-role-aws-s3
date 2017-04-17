@@ -6,7 +6,10 @@
 
 - name: set target buckets fact
   set_fact:
-    _aws_s3_target_buckets: '{{ aws_s3_target_buckets.split(",") | sort }}'
+    _aws_s3_target_buckets: >
+      {{ aws_s3_target_buckets.split(",")
+         if aws_s3_target_buckets is defined else [""]
+         | sort }}
 
 - name: call optional notifier
   include: 'roles/{{ notifier_role }}/tasks/main.yml'
