@@ -4,9 +4,13 @@
 
 - name: create and configure S3 buckets
   s3_bucket:
+    profile:        '{{ aws_profile }}'
+    aws_access_key: '{{ aws_iam_assume_role_access_key    | default(omit) }}'
+    aws_secret_key: '{{ aws_iam_assume_role_secret_key    | default(omit) }}'
+    security_token: '{{ aws_iam_assume_role_session_token | default(omit) }}'
+
     name: '{{ item }}'
     policy: '{{ aws_s3_buckets[item]["policy"] | default(omit) }}'
-    profile: '{{ aws_profile }}'
     region: '{{ aws_s3_buckets[item]["region"] | default(omit) }}'
   with_items: '{{ _aws_s3_target_buckets }}'
   register: _aws_s3_bucket
