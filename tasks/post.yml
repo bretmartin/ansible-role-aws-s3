@@ -12,7 +12,7 @@
 
 
 - name: call optional notifier for newly-created buckets
-  include: 'roles/{{ notifier_role }}/tasks/main.yml'
+  include_tasks: 'roles/{{ notifier_role }}/tasks/main.yml'
   vars:
     message: >
       created new S3 bucket{% if _aws_s3_new_buckets.__len__() != 1 %}s{% endif %}
@@ -26,7 +26,7 @@
     _aws_s3_new_buckets
 
 - name: call optional notifier for modified buckets
-  include: 'roles/{{ notifier_role }}/tasks/main.yml'
+  include_tasks: 'roles/{{ notifier_role }}/tasks/main.yml'
   vars:
     message: >
       modified bucket
@@ -42,7 +42,7 @@
     changed_buckets
 
 - name: call optional notifier for untracked buckets
-  include: 'roles/{{ notifier_role }}/tasks/main.yml'
+  include_tasks: 'roles/{{ notifier_role }}/tasks/main.yml'
   vars:
     message:
     attachments:
@@ -66,7 +66,7 @@
 
 
 - name: call optional notifier
-  include: 'roles/{{ notifier_role }}/tasks/main.yml'
+  include_tasks: 'roles/{{ notifier_role }}/tasks/main.yml'
   vars:
     message: >
       finished running role <b>aws-s3</b>

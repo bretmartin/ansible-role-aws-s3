@@ -1,6 +1,6 @@
 ---
 
-- include: pre.yml
+- include_tasks: pre.yml
 
 - name: create and configure S3 buckets
   s3_bucket:
@@ -16,11 +16,11 @@
   register: _aws_s3_bucket
 
 - name: configure S3 bucket website hosting
-  include: website.yml
+  include_tasks: website.yml
   vars:
     _aws_s3_bucket: '{{ bucket }}'
   with_items: '{{ _aws_s3_target_buckets }}'
   loop_control:
     loop_var: bucket
 
-- include: post.yml
+- include_tasks: post.yml
