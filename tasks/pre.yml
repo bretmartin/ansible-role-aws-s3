@@ -33,17 +33,13 @@
   when: '_aws_s3_target_buckets == [""]'
 
 - name: list existing buckets
-  command: >
-    aws s3api list-buckets
-              --query 'Buckets[].Name'
-              --profile '{{ aws_profile }}'
-  changed_when: False
-  register: _aws_s3_existing_buckets
+  aws_s3_bucket_facts:
+    profile: '{{ aws_profile }}'
+    # this Ansible module supports automatic role assumption
 
 - name: set existing buckets fact
   set_fact:
-    _aws_s3_existing_buckets: >
-      {{ _aws_s3_existing_buckets.stdout | from_json | sort }}
+    _aws_s3_existing_buckets: '{{ buckets | json_query("[*].name") }}'
 
 - name: set new buckets fact
   set_fact:
