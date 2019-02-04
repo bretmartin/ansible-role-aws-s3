@@ -4,6 +4,11 @@
   set_fact:
     _aws_s3_url: https://console.aws.amazon.com/s3/home
 
+- name: load AWS account IDs
+  include_role:
+    name: aws-iam
+    tasks_from: account_ids
+
 - name: set target buckets fact
   set_fact:
     _aws_s3_target_buckets: >
