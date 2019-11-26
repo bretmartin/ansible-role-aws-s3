@@ -7,6 +7,7 @@
     name: '{{ item }}'
     policy: '{{ aws_s3_buckets[item]["policy"] | default(omit) }}'
     profile: '{{ aws_profile }}'
+    versioning: '{{ aws_s3_buckets[item]["versioning"] | default(omit) }}'
     region: '{{ aws_s3_buckets[item]["region"] | default(omit) }}'
   with_items: '{{ _aws_s3_target_buckets }}'
   register: _aws_s3_bucket
