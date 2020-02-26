@@ -9,6 +9,7 @@
     profile: '{{ aws_profile }}'
     versioning: '{{ aws_s3_buckets[item]["versioning"] | default(omit) }}'
     region: '{{ aws_s3_buckets[item]["region"] | default(omit) }}'
+    tags: '{{ aws_s3_buckets[item]["tags"] | default(omit) }}'
   with_items: '{{ _aws_s3_target_buckets }}'
   register: _aws_s3_bucket
 
